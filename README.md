@@ -5,6 +5,10 @@ All  building is done via `anchor build -v`
 Use Solana 1.17
 
 ```
+sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
+```
+
+```
 anchor build -v
 ```
 
