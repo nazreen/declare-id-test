@@ -2,6 +2,8 @@ All  building is done via `anchor build -v`
 
 ## Building with default and no OFT_ID environment variable
 
+Use Solana 1.17
+
 ```
 anchor build -v
 ```
@@ -26,7 +28,7 @@ results in the bytecode hash:
 ## Building with `OFT_ID` set to `4zWMoR3G5hhUY4V51JXvxuCw255D9zeoGRd4dBNJtma6`
 
 ```
-OFT_ID=4zWMoR3G5hhUY4V51JXvxuCw255D9zeoGRd4dBNJtma6 anchor build -v
+anchor build -v -e OFT_ID=4zWMoR3G5hhUY4V51JXvxuCw255D9zeoGRd4dBNJtma6
 ```
 
 and running
@@ -36,7 +38,13 @@ solana-verify get-executable-hash target/verifiable/declare_id_test.so
 
 results in the bytecode hash
 ```
+eb26f9fbe4fe6addc2dcf54f79fcd44144851040430887d926c0cb48dd0abdf7
+```
 
+Temporarily switch to 1.18
+
+```
+sh -c "$(curl -sSfL https://release.solana.com/v1.18.26/install)"
 ```
 
 Deployed program with id `4zWMoR3G5hhUY4V51JXvxuCw255D9zeoGRd4dBNJtma6` to devnet
@@ -48,5 +56,26 @@ solana program deploy -ud target/verifiable/declare_id_test.so --program-id targ
 Running solana-verify
 
 ```
-solana-verify verify-from-repo --remote -um --mount-path examples/oft-solana/programs/oft --library-name dvn --program-id 4zWMoR3G5hhUY4V51JXvxuCw255D9zeoGRd4dBNJtma6 https://github.com/LayerZero-Labs/devtools -- --config env.OFT_ID=\'4zWMoR3G5hhUY4V51JXvxuCw255D9zeoGRd4dBNJtma6\'
+solana-verify verify-from-repo -ud --library-name declare_id_test --program-id 4zWMoR3G5hhUY4V51JXvxuCw255D9zeoGRd4dBNJtma6 https://github.com/nazreen/declare-id-test -- --config env.OFT_ID=\'4zWMoR3G5hhUY4V51JXvxuCw255D9zeoGRd4dBNJtma6\'
+```
+
+Results in
+```
+Fetching on-chain program data for program ID: 4zWMoR3G5hhUY4V51JXvxuCw255D9zeoGRd4dBNJtma6
+Executable Program Hash from repo: eb26f9fbe4fe6addc2dcf54f79fcd44144851040430887d926c0cb48dd0abdf7
+On-chain Program Hash: eb26f9fbe4fe6addc2dcf54f79fcd44144851040430887d926c0cb48dd0abdf7
+Program hash matches ✅
+```
+
+note: `--mount-path` needs to be specified if `Cargo.lock` is not in the repository root
+
+note: `--remote` can only be done on mainnet
+
+
+Uploading of verification data (to devnet) is a success:
+
+```
+Uploading the program verification params to the Solana blockchain...
+Using connection url: https://api.devnet.solana.com
+Program uploaded successfully. Transaction ID: 4eTBf3YCV5cerTd8quiwQGQJzyuSkDXuid2kfAb4ssvHKuL6Gv8XCYCoYez1xLzWxDKF3nSBrikJKoTGvqbQF27Z
 ```
